@@ -94,3 +94,30 @@ def mailing_statistics(request, mailing_id):
     }
 
     return render(request, 'mailings/mailing_statistics.html', context)
+
+
+def home(request):
+    total_mailings = Distribution.objects.count()  # Количество всех рассылок
+    active_mailings = Distribution.objects.filter(status='Запущена').count()  # Количество активных рассылок
+    unique_clients = Distribution.objects.values('clients').distinct().count()  # Количество уникальных получателей
+
+    context = {
+        'total_mailings': total_mailings,
+        'active_mailings': active_mailings,
+        'unique_clients': unique_clients,
+    }
+
+    return render(request, 'mailings/home.html', context)
+
+def statistics(request):
+    successful_attempts = MailingAttempt.objects.filter(status='Успешно').count()
+    failed_attempts = MailingAttempt.objects.filter(status='Не успешно').count()
+    total_messages_sent = MailingAttempt.objects.count()
+
+    context = {
+        'successful_attempts': successful_attempts,
+        'failed_attempts': failed_attempts,
+        'total_messages_sent': total_messages_sent,
+    }
+
+    return render(request, 'mailings/statistics.html', context)
