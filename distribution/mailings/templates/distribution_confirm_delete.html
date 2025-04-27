@@ -1,0 +1,8 @@
+<h1>Удалить рассылку</h1>
+
+<form method="post">
+  {% csrf_token %}
+  <p>Вы уверены, что хотите удалить рассылку "{{ object }}"?</p>
+  <button type="submit">Да, удалить</button>
+  <a href="{% url 'mailings:distribution_list' %}">Отмена</a>
+</form>

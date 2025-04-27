@@ -1,0 +1,11 @@
+<h1>Clients List</h1>
+<ul>
+    {% for client in clients %}
+        <li>
+            <a href="{% url 'clients:client_detail' client.id %}">{{ client.full_name }}</a> -
+            <a href="{% url 'clients:client_edit' client.id %}">Edit</a> |
+            <a href="{% url 'clients:client_delete' client.id %}">Delete</a>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'clients:client_create' %}">Add new client</a>

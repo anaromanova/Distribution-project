@@ -1,0 +1,12 @@
+<h1>Список рассылок</h1>
+<ul>
+  {% for distribution in distributions %}
+    <li>
+      {{ distribution }} |
+      <a href="{% url 'mailings:distribution_update' distribution.id %}">Изменить</a> |
+      <a href="{% url 'mailings:distribution_delete' distribution.id %}">Удалить</a>
+    </li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'mailings:distribution_create' %}">Создать новую рассылку</a>
