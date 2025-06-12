@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+
 <h1>{% if client %}Edit{% else %}Create{% endif %} Client</h1>
 <form method="post">
     {% csrf_token %}

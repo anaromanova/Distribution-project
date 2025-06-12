@@ -5,34 +5,41 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.core.mail import send_mail  # Для отправки письма
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 from .models import Distribution, MailingAttempt
 from .forms import DistributionForm
 
 
-class DistributionListView(ListView):
+class DistributionListView(LoginRequiredMixin, ListView):
     model = Distribution
     template_name = 'mailings/distribution_list.html'
     context_object_name = 'distributions'
 
-class DistributionCreateView(CreateView):
+class DistributionCreateView(LoginRequiredMixin, CreateView):
     model = Distribution
     form_class = DistributionForm
     template_name = 'mailings/distribution_form.html'
     success_url = reverse_lazy('mailings:distribution_list')
 
-class DistributionUpdateView(UpdateView):
+    def form_valid(self, form):
+        form.instance.owner = self.request.user  # вот тут мы прописываем владельца
+        return super().form_valid(form)
+
+class DistributionUpdateView(LoginRequiredMixin, UpdateView):
     model = Distribution
     form_class = DistributionForm
     template_name = 'mailings/distribution_form.html'
     success_url = reverse_lazy('mailings:distribution_list')
 
-class DistributionDeleteView(DeleteView):
+class DistributionDeleteView(LoginRequiredMixin, DeleteView):
     model = Distribution
     template_name = 'mailings/distribution_confirm_delete.html'
     success_url = reverse_lazy('mailings:distribution_list')
 
 
+@login_required
 def send_mailing(request, mailing_id):
     mailing = Distribution.objects.get(id=mailing_id)  # Получаем рассылку
     if mailing.status != 'Запущена':
@@ -77,6 +84,7 @@ def send_mailing(request, mailing_id):
     return redirect('mailing_list')
 
 
+@login_required
 def mailing_statistics(request, mailing_id):
     mailing = Distribution.objects.get(id=mailing_id)
     attempts = mailing.attempts.all()  # Все попытки этой рассылки
@@ -96,6 +104,7 @@ def mailing_statistics(request, mailing_id):
     return render(request, 'mailings/mailing_statistics.html', context)
 
 
+@login_required
 def home(request):
     total_mailings = Distribution.objects.count()  # Количество всех рассылок
     active_mailings = Distribution.objects.filter(status='Запущена').count()  # Количество активных рассылок
@@ -109,6 +118,7 @@ def home(request):
 
     return render(request, 'mailings/home.html', context)
 
+@login_required
 def statistics(request):
     successful_attempts = MailingAttempt.objects.filter(status='Успешно').count()
     failed_attempts = MailingAttempt.objects.filter(status='Не успешно').count()

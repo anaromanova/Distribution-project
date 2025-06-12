@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "clients",
     "mail_messages",
     "mailings",
+    'accounts',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -55,12 +57,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "distribution.urls"
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -72,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "distribution.wsgi.application"
+WSGI_APPLICATION = "wsgi.application"
 
 
 # Database
@@ -140,6 +142,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # AUTH_USER_MODEL = 'clients.Client'
+AUTH_USER_MODEL = 'accounts.User'
 
 LOGIN_URL = 'login'
 
@@ -161,6 +164,11 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',  # Подключение к Redis
+        'LOCATION': os.getenv("LOCATION"),  # Подключение к Redis
     }
 }
+
+CELERY_BROKER_URL = os.getenv("CELERY")
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'

@@ -18,6 +18,10 @@ class MessageCreateView(CreateView):
     fields = ['subject', 'body']
     success_url = reverse_lazy('mail_messages:message_list')  # Перенаправление после создания
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user  # вот тут мы прописываем владельца
+        return super().form_valid(form)
+
 # Представление для редактирования сообщения
 class MessageUpdateView(UpdateView):
     model = Message

@@ -1,0 +1,20 @@
+<nav>
+    <ul>
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'clients:client_list' %}">Клиенты</a></li>
+            <li><a href="{% url 'mailings:distribution_list' %}">Рассылки</a></li>
+            <li><a href="{% url 'mail_messages:message_list' %}">Сообщения</a></li>
+            <li>
+                <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Выход</button>
+                </form>
+            </li>
+        {% else %}
+            <li><a href="{% url 'login' %}">Вход</a></li>
+            <li><a href="{% url 'register' %}">Регистрация</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+
