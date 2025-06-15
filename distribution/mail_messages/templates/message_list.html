@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+<h1>Список сообщений</h1>
+<ul>
+    {% for message in messages %}
+        <li>
+            <a href="{% url 'mail_messages:message_update' message.id %}">{{ message.subject }}</a>
+            <a href="{% url 'mail_messages:message_delete' message.id %}">Удалить</a>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'mail_messages:message_create' %}">Добавить новое сообщение</a>

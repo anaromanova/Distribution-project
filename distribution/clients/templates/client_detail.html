@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+<h1>{{ client.full_name }}</h1>
+<p>Email: {{ client.email }}</p>
+<p>Comment: {{ client.comment }}</p>
+<a href="{% url 'clients:client_edit' client.id %}">Edit</a>
+<a href="{% url 'clients:client_delete' client.id %}">Delete</a>

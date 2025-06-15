@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+<h1>Статистика рассылки: {{ mailing.id }}</h1>
+
+<p>Всего попыток отправки: {{ total_attempts }}</p>
+<p>Успешных попыток: {{ successful_attempts }}</p>
+<p>Неуспешных попыток: {{ failed_attempts }}</p>
+
+<h2>Успешные попытки</h2>
+<ul>
+    {% for attempt in successful_attempts_list %}
+        <li>{{ attempt.client.email }} - {{ attempt.attempt_time }} - {{ attempt.server_response }}</li>
+    {% endfor %}
+</ul>
+
+<h2>Неуспешные попытки</h2>
+<ul>
+    {% for attempt in failed_attempts_list %}
+        <li>{{ attempt.client.email }} - {{ attempt.attempt_time }} - {{ attempt.server_response }}</li>
+    {% endfor %}
+</ul>

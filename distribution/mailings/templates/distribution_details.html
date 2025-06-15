@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+<h1>Детали рассылки: {{ mailing.id }}</h1>
+
+<p>Статус: {{ mailing.status }}</p>
+<p>Сообщение: {{ mailing.message.subject }}</p>
+
+{% if mailing.status == "Запущена" %}
+    <form method="POST" action="{% url 'send_mailing' mailing.id %}">
+        {% csrf_token %}
+        <button type="submit">Отправить рассылку</button>
+    </form>
+{% else %}
+    <p>Рассылка не может быть отправлена, так как она не запущена.</p>
+{% endif %}
